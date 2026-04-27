@@ -1,0 +1,140 @@
+<comment>
+problem   = Keplerian disk 
+
+<job>
+problem_id  = disk      # problem ID: basename of output filenames
+
+<output1>
+file_type   = hdf5      # VTK data dump
+variable    = prim      #
+dt          = 628.3185307179587     # time increment between outputs
+orbital_system = true
+Nfiles      = 300
+log_output  = 0
+xdmf        = false
+<output2>
+file_type   = hst       # History data dump
+dt          = 6.283185307179586    # time increment between outputs
+Nfiles      = 300
+log_output  = 0
+
+<output3>
+file_type   = rst      # VTK data dump
+dt          = 6283.185307179586     # time increment between outputs
+Nfiles      = 300
+log_output  = 0
+
+<time>
+cfl_number  = 0.3       # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim        = -1        # cycle limit
+tlim        = 376991.1184307752  # time limit
+integrator  = rk2       # time integration algorithm
+xorder      = 2         # order of spatial reconstruction
+ncycle_out  = 1000      # interval for stdout summary info
+
+<mesh>
+nx1         = 600            # Number of zones in X1-direction
+x1min       = 0.3            # minimum value of X1
+x1max       = 4.0            # maximum value of X1
+ix1_bc      = user           # Inner-X1 boundary condition flag
+ox1_bc      = user           # Outer-X1 boundary condition flag
+x1rat       = 1.004326444094654 # non-uniform grid ratio
+
+nx2         = 528            # Number of zones in X2-direction
+x2min       = 0.             # minimum value of X2
+x2max       = 6.2831853071795862   # maximum value of X2
+ix2_bc      = periodic       # Inner-X2 boundary condition flag
+ox2_bc      = periodic       # Outer-X2 boundary condition flag
+
+nx3         = 1              # Number of zones in X3-direction
+x3min       = -0.5           # minimum value of X3
+x3max       = 0.5            # maximum value of X3
+ix3_bc      = periodic       # Inner-X3 boundary condition flag
+ox3_bc      = periodic       # Outer-X3 boundary condition flag
+
+refinement  = None
+
+<meshblock>
+nx1         = 25
+nx2         = 24
+nx3         = 1
+
+<hydro>
+gamma           = 1.43        # gamma = C_p/C_v
+iso_sound_speed = 0.1        # isothermal sound speed
+dfloor          = 1e-9
+pfloor          = 1e-12
+sfloor          = 1e-20
+
+<orbital_advection>
+OAorder    = 2        # 0: w/o OA, 1: w/ OA(1st), 2: w/ OA(2nd)
+
+<problem>
+GM          = 1.0        # stellar mass parameter
+ms_in_msol  = 1.0
+md_in_ms    = 0.05       # disk mass in stellar masses
+r0_in_au    = 5.2        # reference radius: sets unit length and rotating frame radius
+rc_in_au    = 60.0       # characteristic disk radius in astronomical units (Lynden-Bell & Pringe, 1974, profile)
+hr_at_au    = 0.025812156881595803  # disk aspect ratio at 1 astronomical unit
+beta_Sig    = -1.0       # column density power law exponent (Lynden-Bell & Pringe, 1974, profile)
+beta_T      = -0.5       # temperature power law exponent
+mue         = 2.33       # mean molecular weight
+perturb     = 0.0        # relative magnitude of initial perturbation to disk structure
+
+nu_iso          = 1.     # use viscosity?
+nu_scalar_iso_1 = 2e-3   # particle size diffusivity (alpha viscosity model)
+nu_scalar_iso_2 = 2e-3   # particle size diffusivity (alpha viscosity model)
+nu_scalar_iso_3 = 2e-3   # particle size diffusivity (alpha viscosity model)
+alpha_gas       = 2e-3   # actual alpha viscosity - determines gas viscosity nu=alpha_gas*cs*H
+
+MMSN        = false      # if true: runs a power law disk based based on the Minimum Mass Solar Nebular
+isotherm    = false      # if true: enforce isothermal EOS by resetting the specific internal energy in every timestep
+therm_relax = false      # if true: add thermal relaxation source term: either betacool or dustcool
+beta_cool   = false      # if true: beta cooling on local timescale tcool*OmegaKepler
+dust_cool   = false      # if true: beta cooling on local dust-gas thermal accomodation timescale
+t_cool      = 0.01       # cooling timescale in units of the local Keplerian timescale (only for betacool==true)
+
+coag        = true       # if true: dust coagulation with the TriPoD method !!! requires --nscalars=3 !!!
+mom_coag    = false      # if true: momentum coagulation
+Benitez     = false      # Initialize with eq. velocities from Benítez-Llambay, Krapp, & Pessah (2019) 
+v_frag      = 400.       # fragmentation velocity for dust coagulation
+dust_amax   = 1e-4       # maximum grain size of dust size distribution with Nscalar species in cm
+dust_amin   = 1e-5       # minimum grain size of dust size distribution with Nscalar species in cm
+alpha_turb  = 2e-3       # alpha turbulence parameter - determines relative particle velocities
+dust_d_ini  = 2e-3       # dust diffusivity for initial condition (ONLY determines Hd(n,t=0))
+dust_q      = -3.5       # power law of dust size distribution
+dust_rho_m  = 1.67       # dust material density
+eps_ini     = 1e-2       # total initial dust-to-gas ratio
+allow_dr_part = true
+
+R_int       = 7.8        # seperating radius in au inner/outer disk for tracer concentrations
+C_in        = 1e-15      # tracer concentration inner disk
+C_out       = 1.         # tracer concentration outer disk
+
+infall      = false      # simulate infall as in Kuznetsova et al. (2022) - also enforces isothermal EOS
+M_in        = 1e-6       # infall rate (solar masses per year)
+R_in        = 30.        # inner edge of infall zone (in au)
+R_out       = 60.        # outer edge of infall zone
+a_in        = 1e-4       # size of infalling particles (cm)
+
+damping     = true       # sponge layers at the inner and outer radial boundary?
+period_ratio= 1.5        # if>0: defines the orbital period ratio between the boundaries and the damping zone edges (i.e. sets damping layer size)
+dsize_in    = 0.         # if period_ratio==0: size of the inner damping layer in au
+dsize_out   = 0.         # if period_ratio==0: size of the outer damping layer in au
+t_damp_in   = 1.0        # inner damping time in local Keplerian orbital timescales t_damp=t_damp*r**1.5
+t_damp_out  = 0.3        # outer damping time in local Keplerian orbital timescales t_damp=t_damp*r**1.5
+
+planet      = true       # add the gravitational potential of a planet at R/R_code=1. 
+planet_power= false      # if true: use a power law series as potential, else: Plummer potential
+ind_term    = true       # indirect term of gravitational potential
+Mp_s        = 0.000381835 # planetary mass in stellar masses
+r_sm        = 0.7        # smoothing length/power-law-limit in planetary Hill radii
+
+accretion   = false
+planet_growth = false
+
+<dust>
+drag_method = 2nd-implicit
+DustFeedback_Flag = 1
+Diffusion_Flag = 1
+Momentum_Diffusion_Flag = 0
